@@ -1,19 +1,32 @@
 // proxyServer.js
 
-const http = require('http');
-const httpProxy = require('http-proxy');
+const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+//const auth = require('http-auth');
 
-// Create a proxy server instance
-const proxy = httpProxy.createProxyServer({});
+// Basic authentication middleware
+// const basic = auth.basic({
+//   realm: "Enter username and password.",
+//   file: __dirname + "/.htpasswd" // Use a proper path for your .htpasswd file
+// });
 
-// Create an HTTP server that will handle proxy requests
-const server = http.createServer((req, res) => {
-  // Proxy all requests to http://localhost:3000
-  proxy.web(req, res, { target: 'https://mukul1098.pythonanywhere.com/' });
+const app = express();
+
+// Enable basic authentication for the reverse proxy
+//app.use(auth.connect(basic));
+
+// Create a proxy middleware with authentication
+const proxyMiddleware = createProxyMiddleware({
+  target: 'http://localhost:3000/', // Replace with the target URL you want to proxy to
+  changeOrigin: true,
+  secure: false, // Set this to true if your target server uses HTTPS
+  // Add any additional proxy options if needed
 });
 
-// Listen for incoming requests on port 8000
-const port = 3000;
-server.listen(port, () => {
-  console.log(`Proxy server is running on port ${port}`);
+// Use the proxy middleware for specific routes
+app.use('/', proxyMiddleware);
+
+const port = 8000;
+app.listen(port, () => {
+  console.log(`Reverse proxy server is running on port ${port}`);
 });
