@@ -17,7 +17,7 @@ const app = express();
 
 // Create a proxy middleware with authentication
 const proxyMiddleware = createProxyMiddleware({
-  target: 'https://mukul1098.pythonanywhere.com/', // Replace with the target URL you want to proxy to
+  target: 'https://rpaccessmanagementfoundationlabproxyserv.onrender.com', // Replace with the target URL you want to proxy to
   changeOrigin: true,
   secure: true, // Set this to true if your target server uses HTTPS
   // Add any additional proxy options if needed
